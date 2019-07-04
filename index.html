@@ -67,7 +67,7 @@
     setMinesNum();
 
     //게임 동작
-    // $('table td').addClass('close');
+    $('table td').addClass('close');
     //칸을 클릭하면 지뢰가있는 지를 확인하고 없다면 숫자를 표시
     $('table td').on('click', function() {
       //현재 클릭한 요소의 인덱스를 확인
@@ -88,10 +88,11 @@
       location.reload();
     });
   }
-  //del
-  minesTable.forEach(function(element, index) {
-    $('.mines-table #' + index).text(element);
-  });
+
+  //테스트 코드 전체 표시
+  // minesTable.forEach(function(element, index) {
+  //   $('.mines-table #' + index).text(element);
+  // });
 
 
 
@@ -100,42 +101,27 @@
   {
     let table;
     for (let row = 0; row < 100; row++) {
-      switch (row) {
+      let type = 0;
+      let type_1 = [0];
+      let type_2 = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+      let type_3 = [100];
+
+      if (type_1.indexOf(row) != -1) type = 1
+      if (type_2.indexOf(row) != -1) type = 2
+      if (type_3.indexOf(row) != -1) type = 3
+
+      switch (type) {
         case 0:
+        table += '<td id="' + row + '"></td>';
+        break;
+        case 1:
         table += '<tr><td id="' + row + '"></td>';
         break;
-        case 10:
+        case 2:
         table += '</tr><tr><td id="' + row + '"></td>';
         break;
-        case 20:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 30:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 40:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 50:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 60:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 70:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 80:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 90:
-        table += '</tr><tr><td id="' + row + '"></td>';
-        break;
-        case 100:
+        case 3:
         table += '</tr><tr><td id="' + row + '"></td></tr>';
-        break;
-        default:
-        table += '<td id="' + row + '"></td>';
         break;
       }
     }
@@ -165,33 +151,23 @@
     for (let index = 0; index < 100; index++) {
       let bombCount = 0;
       let type = 0;
+      let type_1 = [0];
+      let type_2 = [9];
+      let type_3 = [10, 20, 30, 40, 50, 60, 70, 80];
+      let type_4 = [19, 29, 39, 49, 59, 69, 79, 89];
+      let type_5 = [90];
+      let type_6 = [99];
+
       //현재 칸이 지뢰가 배치된 칸이 아니라면 인근 지뢰 카운팅을 시작
       if (minesTable[index] != 'Bomb') {
-        let type_1 = [0];
-        let type_2 = [9];
-        let type_3 = [10, 20, 30, 40, 50, 60, 70, 80];
-        let type_4 = [19, 29, 39, 49, 59, 69, 79, 89];
-        let type_5 = [90];
-        let type_6 = [99];
+        if (type_1.indexOf(index) != -1) type = 1;
+        if (type_2.indexOf(index) != -1) type = 2;
+        if (type_3.indexOf(index) != -1) type = 3;
+        if (type_4.indexOf(index) != -1) type = 4;
+        if (type_5.indexOf(index) != -1) type = 5;
+        if (type_6.indexOf(index) != -1) type = 6;
 
-        if (type_1.indexOf(index) != -1) {
-          type = 1;
-        }
-        if (type_2.indexOf(index) != -1) {
-          type = 2;
-        }
-        if (type_3.indexOf(index) != -1) {
-          type = 3;
-        }
-        if (type_4.indexOf(index) != -1) {
-          type = 4;
-        }
-        if (type_5.indexOf(index) != -1) {
-          type = 5;
-        }
-        if (type_6.indexOf(index) != -1) {
-          type = 6;
-        }
+        //위치에 따라 다른 방식으로 인근 지뢰 카운트
         switch (type) {
           case 0:
           if (minesTable[index - 1] == 'Bomb') bombCount++;
