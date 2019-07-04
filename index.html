@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <title>Minesweeper by hojin</title>
+    <style media="screen">
+      td {
+        width: 2.5em;
+        height: 2em;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <table class="mines-table"></table>
+  </body>
+  <script type="text/javascript">
+
+  let minesTable = new Array(100);
+
+  genTable();
+  setMines();
+
+  //지뢰가 배치될 테이블 생성
+  function genTable ()
+  {
+    for (let row = 0; row < 10; row++) {
+      $('.mines-table').append('<tr><td></td><td></td><td></td><td></td>\
+        <td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+    }
+  }
+
+  //랜덤하게 폭탄을 생성하여 배치
+  function setMines ()
+  {
+    let duplicate_check;
+    let random_mines_position;
+
+    for (let mines = 0; mines < 10; mines++) {
+      random_mines_position = Math.floor(Math.random() * 100) + 1;
+
+      if (minesTable[random_mines_position] != 'm') {
+        minesTable[random_mines_position] = 'm';
+      } else { mines -= 1; }
+    }
+    console.log(minesTable);
+
+    minesTable.forEach(function(element, index){
+      
+    });
+  }
+
+
+  </script>
+</html>
