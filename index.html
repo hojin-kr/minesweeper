@@ -17,18 +17,61 @@
   </body>
   <script type="text/javascript">
 
-  let minesTable = new Array(100);
+  let minesTable = new Array();
 
   genTable();
   setMines();
+  setMinesNum();
+
+  minesTable.forEach(function(element, index) {
+    $('.mines-table .' + index).text(element);
+  });
 
   //지뢰가 배치될 테이블 생성
   function genTable ()
   {
-    for (let row = 0; row < 10; row++) {
-      $('.mines-table').append('<tr><td></td><td></td><td></td><td></td>\
-        <td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+    let table;
+    for (let row = 0; row < 100; row++) {
+      switch (row) {
+        case 0:
+        table += '<tr><td class="' + row + '"></td>';
+        break;
+        case 10:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 20:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 30:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 40:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 50:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 60:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 70:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 80:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 90:
+        table += '</tr><tr><td class="' + row + '"></td>';
+        break;
+        case 100:
+        table += '</tr><tr><td class="' + row + '"></td></tr>';
+        break;
+        default:
+        table += '<td class="' + row + '"></td>';
+        break;
+      }
     }
+    $('.mines-table').append(table);
   }
 
   //랜덤하게 폭탄을 생성하여 배치
@@ -37,18 +80,34 @@
     let duplicate_check;
     let random_mines_position;
 
+    //랜덤하게 지뢰를 생성해서 배치
     for (let mines = 0; mines < 10; mines++) {
       random_mines_position = Math.floor(Math.random() * 100) + 1;
 
-      if (minesTable[random_mines_position] != 'm') {
-        minesTable[random_mines_position] = 'm';
+      if (minesTable[random_mines_position] != 'Bomb') {
+        minesTable[random_mines_position] = 'Bomb';
       } else { mines -= 1; }
     }
     console.log(minesTable);
+  }
 
-    minesTable.forEach(function(element, index){
-      
-    });
+  //인근 지뢰 갯수 표시
+  function setMinesNum ()
+  {
+    for (let index = 0; index < 100; index++) {
+      let bombCount = 0;
+      if (minesTable[index] != 'Bomb') {
+        if (minesTable[index + 1] == 'Bomb') bombCount++;
+        if (minesTable[index + 9] == 'Bomb') bombCount++;
+        if (minesTable[index + 10] == 'Bomb') bombCount++;
+        if (minesTable[index + 11] == 'Bomb') bombCount++;
+        if (minesTable[index - 1] == 'Bomb') bombCount++;
+        if (minesTable[index - 9] == 'Bomb') bombCount++;
+        if (minesTable[index - 10] == 'Bomb') bombCount++;
+        if (minesTable[index - 11] == 'Bomb') bombCount++;
+        minesTable[index] = bombCount;
+      }
+    }
   }
 
 
