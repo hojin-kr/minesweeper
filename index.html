@@ -5,27 +5,65 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <title>Minesweeper by hojin</title>
     <style media="screen">
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      header {
+        margin-bottom: 1em;
+      }
       td {
+        text-align: center;
         width: 2.5em;
         height: 2em;
         border: 1px solid black;
       }
+
+      .close {
+        background-color: black;
+      }
     </style>
   </head>
   <body>
+    <header>
+      Minesweeper By hojin - jhj377@gmail.com
+    </header>
     <table class="mines-table"></table>
   </body>
   <script type="text/javascript">
 
+
+  //지뢰 세팅 배열 생성
   let minesTable = new Array();
 
-  genTable();
-  setMines();
-  setMinesNum();
+  run();
 
-  minesTable.forEach(function(element, index) {
-    $('.mines-table .' + index).text(element);
-  });
+  function run ()
+  {
+    //지뢰가 배치될 테이블을 table로 생성하고 각 td에 class를 인덱스로 부여
+    genTable();
+    //랜덤하게 지뢰를 생성
+    setMines();
+    //인근 지뢰 갯수 표시
+    setMinesNum();
+
+    //게임 동작
+    $('table td').addClass('close');
+    $('table td').on('click', function () {
+      $(this).removeClass('close');
+      $(this).addClass('open');
+      if ($(this).text() == 'Bomb') {
+        alert('Game Over');
+      }
+    });
+
+    //테이블에 세팅한 지뢰 출력
+    minesTable.forEach(function(element, index) {
+      $('.mines-table .' + index).text(element);
+    });
+
+  }
 
   //지뢰가 배치될 테이블 생성
   function genTable ()
@@ -74,7 +112,7 @@
     $('.mines-table').append(table);
   }
 
-  //랜덤하게 폭탄을 생성하여 배치
+  //랜덤하게 지뢰를 생성
   function setMines ()
   {
     let duplicate_check;
@@ -83,12 +121,11 @@
     //랜덤하게 지뢰를 생성해서 배치
     for (let mines = 0; mines < 10; mines++) {
       random_mines_position = Math.floor(Math.random() * 100) + 1;
-
+      //중복 생성을 방지
       if (minesTable[random_mines_position] != 'Bomb') {
         minesTable[random_mines_position] = 'Bomb';
       } else { mines -= 1; }
     }
-    console.log(minesTable);
   }
 
   //인근 지뢰 갯수 표시
