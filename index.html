@@ -13,10 +13,13 @@
       header {
         margin-bottom: 1em;
       }
+      table {
+        width: 80%;
+      }
       td {
         text-align: center;
-        width: 3.5em;
-        height: 3em;
+        width: 2em;
+        height: 2.5em;
         border: 1px solid black;
       }
       .close {
@@ -29,12 +32,16 @@
       Minesweeper By hojin - jhj377@gmail.com
     </header>
     <table class="mines-table"></table>
+    <div class="point">
+
+    </div>
   </body>
   <script type="text/javascript">
 
 
   //지뢰 세팅 배열 생성
   let minesTable = new Array();
+  let point = 0;
 
   run();
 
@@ -53,8 +60,12 @@
       $(this).removeClass('close');
       $(this).addClass('open');
       if ($(this).text() == 'Bomb') {
+        point = 0;
         alert('Game Over');
+      } else {
+        point ++;
       }
+      $('.point').text(point);
     });
 
     //테이블에 세팅한 지뢰 출력
