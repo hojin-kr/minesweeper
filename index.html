@@ -20,10 +20,23 @@
         text-align: center;
         width: 2em;
         height: 2.5em;
-        border: 1px solid black;
+        border-radius: 5px;
       }
       .close {
         background-color: black;
+      }
+      .restart button{
+        font-size: 1.5em;
+        border-radius: 10px;
+        color: white;
+        background-color: black;
+        border: none;
+        padding: 0.5em;
+        margin: 1em;
+      }
+      .restart button:hover{
+        color: black;
+        background-color: white;
       }
     </style>
   </head>
@@ -32,8 +45,8 @@
       Minesweeper By hojin - jhj377@gmail.com
     </header>
     <table class="mines-table"></table>
-    <div class="point">
-
+    <div class="restart">
+      <button class="restartBtn" type="button" name="button">restart</button>
     </div>
   </body>
   <script type="text/javascript">
@@ -41,7 +54,6 @@
 
   //지뢰 세팅 배열 생성
   let minesTable = new Array();
-  let point = 0;
 
   run();
 
@@ -55,25 +67,33 @@
     setMinesNum();
 
     //게임 동작
-    $('table td').addClass('close');
-    $('table td').on('click', function () {
+    // $('table td').addClass('close');
+    //칸을 클릭하면 지뢰가있는 지를 확인하고 없다면 숫자를 표시
+    $('table td').on('click', function() {
+      //현재 클릭한 요소의 인덱스를 확인
+      let index = $(this).attr('id');
+      $('.mines-table #' + index).text(minesTable[index]);
+
+      //.close style 해제
       $(this).removeClass('close');
-      $(this).addClass('open');
+
+      //클릭한 요소가 지뢰를 가지고 있는지 확인
       if ($(this).text() == 'Bomb') {
-        point = 0;
         alert('Game Over');
-      } else {
-        point ++;
       }
-      $('.point').text(point);
     });
 
-    //테이블에 세팅한 지뢰 출력
-    minesTable.forEach(function(element, index) {
-      $('.mines-table .' + index).text(element);
+    //재시작 버튼 (페이지 새로고침)
+    $('.restart').on('click', function() {
+      location.reload();
     });
-
   }
+  //del
+  minesTable.forEach(function(element, index) {
+    $('.mines-table #' + index).text(element);
+  });
+
+
 
   //지뢰가 배치될 테이블 생성
   function genTable ()
@@ -82,40 +102,40 @@
     for (let row = 0; row < 100; row++) {
       switch (row) {
         case 0:
-        table += '<tr><td class="' + row + '"></td>';
+        table += '<tr><td id="' + row + '"></td>';
         break;
         case 10:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 20:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 30:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 40:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 50:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 60:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 70:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 80:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 90:
-        table += '</tr><tr><td class="' + row + '"></td>';
+        table += '</tr><tr><td id="' + row + '"></td>';
         break;
         case 100:
-        table += '</tr><tr><td class="' + row + '"></td></tr>';
+        table += '</tr><tr><td id="' + row + '"></td></tr>';
         break;
         default:
-        table += '<td class="' + row + '"></td>';
+        table += '<td id="' + row + '"></td>';
         break;
       }
     }
@@ -128,11 +148,12 @@
     let duplicate_check;
     let random_mines_position;
 
-    //랜덤하게 지뢰를 생성해서 배치
+    //10개의 지뢰를 랜덤하게 생성해서 배치
     for (let mines = 0; mines < 10; mines++) {
       random_mines_position = Math.floor(Math.random() * 100) + 1;
       //중복 생성을 방지
       if (minesTable[random_mines_position] != 'Bomb') {
+        //랜덤한 위치에 지뢰 삽입
         minesTable[random_mines_position] = 'Bomb';
       } else { mines -= 1; }
     }
@@ -143,15 +164,81 @@
   {
     for (let index = 0; index < 100; index++) {
       let bombCount = 0;
+      let type = 0;
+      //현재 칸이 지뢰가 배치된 칸이 아니라면 인근 지뢰 카운팅을 시작
       if (minesTable[index] != 'Bomb') {
-        if (minesTable[index + 1] == 'Bomb') bombCount++;
-        if (minesTable[index + 9] == 'Bomb') bombCount++;
-        if (minesTable[index + 10] == 'Bomb') bombCount++;
-        if (minesTable[index + 11] == 'Bomb') bombCount++;
-        if (minesTable[index - 1] == 'Bomb') bombCount++;
-        if (minesTable[index - 9] == 'Bomb') bombCount++;
-        if (minesTable[index - 10] == 'Bomb') bombCount++;
-        if (minesTable[index - 11] == 'Bomb') bombCount++;
+        let type_1 = [0];
+        let type_2 = [9];
+        let type_3 = [10, 20, 30, 40, 50, 60, 70, 80];
+        let type_4 = [19, 29, 39, 49, 59, 69, 79, 89];
+        let type_5 = [90];
+        let type_6 = [99];
+
+        if (type_1.indexOf(index) != -1) {
+          type = 1;
+        }
+        if (type_2.indexOf(index) != -1) {
+          type = 2;
+        }
+        if (type_3.indexOf(index) != -1) {
+          type = 3;
+        }
+        if (type_4.indexOf(index) != -1) {
+          type = 4;
+        }
+        if (type_5.indexOf(index) != -1) {
+          type = 5;
+        }
+        if (type_6.indexOf(index) != -1) {
+          type = 6;
+        }
+        switch (type) {
+          case 0:
+          if (minesTable[index - 1] == 'Bomb') bombCount++;
+          if (minesTable[index - 9] == 'Bomb') bombCount++;
+          if (minesTable[index - 10] == 'Bomb') bombCount++;
+          if (minesTable[index - 11] == 'Bomb') bombCount++;
+          if (minesTable[index + 1] == 'Bomb') bombCount++;
+          if (minesTable[index + 9] == 'Bomb') bombCount++;
+          if (minesTable[index + 10] == 'Bomb') bombCount++;
+          if (minesTable[index + 11] == 'Bomb') bombCount++;
+          break;
+          case 1:
+          if (minesTable[index + 1] == 'Bomb') bombCount++;
+          if (minesTable[index + 9] == 'Bomb') bombCount++;
+          if (minesTable[index + 10] == 'Bomb') bombCount++;
+          break;
+          case 2:
+          if (minesTable[index - 1] == 'Bomb') bombCount++;
+          if (minesTable[index + 9] == 'Bomb') bombCount++;
+          if (minesTable[index + 10] == 'Bomb') bombCount++;
+          break;
+          case 3:
+          if (minesTable[index - 9] == 'Bomb') bombCount++;
+          if (minesTable[index - 10] == 'Bomb') bombCount++;
+          if (minesTable[index + 1] == 'Bomb') bombCount++;
+          if (minesTable[index + 10] == 'Bomb') bombCount++;
+          if (minesTable[index + 11] == 'Bomb') bombCount++;
+          break;
+          case 4:
+          if (minesTable[index + 9] == 'Bomb') bombCount++;
+          if (minesTable[index + 10] == 'Bomb') bombCount++;
+          if (minesTable[index - 1] == 'Bomb') bombCount++;
+          if (minesTable[index - 10] == 'Bomb') bombCount++;
+          if (minesTable[index - 11] == 'Bomb') bombCount++;
+          break;
+          case 5:
+          if (minesTable[index - 9] == 'Bomb') bombCount++;
+          if (minesTable[index - 10] == 'Bomb') bombCount++;
+          if (minesTable[index + 1] == 'Bomb') bombCount++;
+          break;
+          case 6:
+          if (minesTable[index - 1] == 'Bomb') bombCount++;
+          if (minesTable[index - 10] == 'Bomb') bombCount++;
+          if (minesTable[index - 11] == 'Bomb') bombCount++;
+          break;
+        }
+        //인근 지뢰 갯수를 체크
         minesTable[index] = bombCount;
       }
     }
